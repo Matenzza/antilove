@@ -1555,6 +1555,36 @@
     <div class="toast" id="toast"></div>
 
     <script>
+        // ===== RESET COMPLET AU CHARGEMENT =====
+        window.addEventListener('pageshow', function() {
+            // Toujours afficher la page de garde
+            document.getElementById('introScreen').classList.remove('hidden');
+            // Reset musique
+            const audio = document.getElementById('bgMusic');
+            audio.pause();
+            audio.currentTime = 0;
+            // Reset formulaire manifeste
+            const form = document.getElementById('signForm');
+            if (form) {
+                form.style.opacity = '1';
+                document.getElementById('inputName').disabled = false;
+                document.getElementById('inputName').value = '';
+                document.getElementById('inputEx').disabled = false;
+                document.getElementById('inputEx').value = '';
+                const btn = document.getElementById('signBtn');
+                btn.innerHTML = '✍️ Signer le manifeste';
+                btn.classList.remove('signed');
+            }
+            // Reset destruction coeurs
+            if (typeof destroyCount !== 'undefined') {
+                destroyCount = 0;
+                document.getElementById('destroyCount').textContent = '0';
+                document.getElementById('bigHeart').textContent = '❤️';
+            }
+            // Fermer la victoire si ouverte
+            document.getElementById('victoryOverlay').classList.remove('active');
+        });
+
         // ===== MUSIC & INTRO =====
         const bgMusic = document.getElementById('bgMusic');
         const musicBtn = document.getElementById('musicBtn');
