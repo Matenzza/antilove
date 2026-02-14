@@ -701,6 +701,159 @@
             transform: translateX(-50%) translateY(0);
         }
 
+        /* ===== INTRO SCREEN ===== */
+        .intro-screen {
+            position: fixed;
+            inset: 0;
+            z-index: 99999;
+            background: var(--black);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            gap: 2rem;
+            cursor: pointer;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+
+        .intro-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .intro-emoji {
+            font-size: 5rem;
+            animation: introFloat 2s ease infinite alternate;
+        }
+
+        @keyframes introFloat {
+            0% { transform: translateY(0) scale(1); }
+            100% { transform: translateY(-15px) scale(1.05); }
+        }
+
+        .intro-text {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(1.5rem, 4vw, 2.5rem);
+            font-weight: 900;
+            color: var(--light);
+        }
+
+        .intro-text span {
+            color: var(--red);
+        }
+
+        .intro-sub {
+            font-size: 1rem;
+            color: var(--grey);
+            animation: pulse 1.5s ease infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 0.5; }
+            50% { opacity: 1; }
+        }
+
+        .intro-note {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.25);
+            margin-top: -0.5rem;
+        }
+
+        /* ===== MUSIC CONTROL ===== */
+        .music-control {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            z-index: 9998;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--dark);
+            border: 1px solid rgba(230, 57, 70, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.3rem;
+            transition: all 0.3s;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.4);
+        }
+
+        .music-control:hover {
+            border-color: var(--red);
+            transform: scale(1.1);
+            box-shadow: 0 4px 20px rgba(230, 57, 70, 0.3);
+        }
+
+        .music-control .bars {
+            display: flex;
+            align-items: flex-end;
+            gap: 3px;
+            height: 18px;
+        }
+
+        .music-control .bar {
+            width: 3px;
+            background: var(--red);
+            border-radius: 2px;
+            animation: barAnim 0.8s ease infinite alternate;
+        }
+
+        .music-control .bar:nth-child(1) { height: 8px; animation-delay: 0s; }
+        .music-control .bar:nth-child(2) { height: 14px; animation-delay: 0.15s; }
+        .music-control .bar:nth-child(3) { height: 6px; animation-delay: 0.3s; }
+        .music-control .bar:nth-child(4) { height: 12px; animation-delay: 0.45s; }
+
+        @keyframes barAnim {
+            0% { height: 4px; }
+            100% { height: 18px; }
+        }
+
+        .music-control.paused .bar {
+            animation: none;
+            height: 3px !important;
+            background: var(--grey);
+        }
+
+        .music-info {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 4.5rem;
+            z-index: 9998;
+            background: var(--dark);
+            border: 1px solid rgba(230, 57, 70, 0.2);
+            border-radius: 12px;
+            padding: 0.6rem 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            opacity: 0;
+            transform: translateX(10px);
+            transition: all 0.3s;
+            pointer-events: none;
+        }
+
+        .music-control:hover + .music-info,
+        .music-info:hover {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: all;
+        }
+
+        .music-info-text {
+            font-size: 0.75rem;
+            color: var(--grey);
+            white-space: nowrap;
+        }
+
+        .music-info-title {
+            font-weight: 600;
+            color: var(--light);
+            font-size: 0.8rem;
+        }
+
         /* ===== VICTORY MODAL ===== */
         .victory-overlay {
             position: fixed;
@@ -819,6 +972,35 @@
     </style>
 </head>
 <body>
+    <!-- INTRO SCREEN -->
+    <div class="intro-screen" id="introScreen" onclick="enterSite()">
+        <div class="intro-emoji">💔</div>
+        <div class="intro-text">Bienvenue en <span>Enfer</span></div>
+        <div class="intro-sub">🔊 Clique n'importe où pour entrer</div>
+        <div class="intro-note">Son recommandé — Helsinki · Dinos</div>
+    </div>
+
+    <!-- AUDIO PLAYER -->
+    <audio id="bgMusic" loop preload="auto">
+        <source src="helsinki.mp3" type="audio/mpeg">
+    </audio>
+
+    <!-- MUSIC CONTROL BUTTON -->
+    <button class="music-control" id="musicBtn" onclick="toggleMusic()" title="Musique">
+        <div class="bars">
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+            <div class="bar"></div>
+        </div>
+    </button>
+    <div class="music-info">
+        <div>
+            <div class="music-info-title">Helsinki</div>
+            <div class="music-info-text">Dinos</div>
+        </div>
+    </div>
+
     <!-- NAVIGATION -->
     <nav>
         <a href="#" class="nav-logo">💔 Anti<span>Valentin</span></a>
@@ -1088,6 +1270,37 @@
     <div class="toast" id="toast"></div>
 
     <script>
+        // ===== MUSIC & INTRO =====
+        const bgMusic = document.getElementById('bgMusic');
+        const musicBtn = document.getElementById('musicBtn');
+        let musicPlaying = false;
+
+        function enterSite() {
+            const intro = document.getElementById('introScreen');
+            intro.classList.add('hidden');
+            // Start music
+            bgMusic.volume = 0.4;
+            bgMusic.play().then(() => {
+                musicPlaying = true;
+                musicBtn.classList.remove('paused');
+            }).catch(() => {
+                musicPlaying = false;
+                musicBtn.classList.add('paused');
+            });
+        }
+
+        function toggleMusic() {
+            if (musicPlaying) {
+                bgMusic.pause();
+                musicPlaying = false;
+                musicBtn.classList.add('paused');
+            } else {
+                bgMusic.play();
+                musicPlaying = true;
+                musicBtn.classList.remove('paused');
+            }
+        }
+
         // ===== FLOATING HEARTS BACKGROUND =====
         const heartsContainer = document.getElementById('floatingHearts');
         const brokenHearts = ['💔', '🖤', '😤', '🚫', '💀', '🔥'];
