@@ -665,6 +665,68 @@
             font-weight: 700;
         }
 
+        /* ===== TOP EX ===== */
+        .top-ex {
+            max-width: 450px;
+            margin: 2.5rem auto 0;
+            text-align: center;
+            padding: 2rem;
+            background: rgba(230, 57, 70, 0.06);
+            border: 1px solid rgba(230, 57, 70, 0.2);
+            border-radius: 16px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .top-ex::before {
+            content: '👑';
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 2rem;
+            animation: crownFloat 2s ease infinite alternate;
+        }
+
+        @keyframes crownFloat {
+            0% { transform: translateX(-50%) translateY(0); }
+            100% { transform: translateX(-50%) translateY(-6px); }
+        }
+
+        .top-ex-label {
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--grey);
+            margin-bottom: 0.8rem;
+            margin-top: 0.5rem;
+        }
+
+        .top-ex-name {
+            font-family: 'Playfair Display', serif;
+            font-size: clamp(2rem, 5vw, 3rem);
+            font-weight: 900;
+            color: var(--red);
+            text-shadow: 0 0 30px rgba(230, 57, 70, 0.3);
+            animation: topExPulse 3s ease infinite;
+        }
+
+        @keyframes topExPulse {
+            0%, 100% { text-shadow: 0 0 20px rgba(230, 57, 70, 0.2); }
+            50% { text-shadow: 0 0 40px rgba(230, 57, 70, 0.5); }
+        }
+
+        .top-ex-count {
+            font-size: 0.9rem;
+            color: var(--grey);
+            margin-top: 0.5rem;
+        }
+
+        .top-ex-count span {
+            color: var(--accent);
+            font-weight: 700;
+        }
+
         /* ===== LEADERBOARD ===== */
         .leaderboard {
             max-width: 500px;
@@ -1434,6 +1496,13 @@
                 Déjà <span id="sigCount">0</span> signataires rebelles
             </p>
 
+            <!-- TOP EX DU JOUR -->
+            <div class="top-ex reveal" id="topExBlock" style="display:none;">
+                <p class="top-ex-label">L'ex le plus cité aujourd'hui</p>
+                <div class="top-ex-name" id="topExName"></div>
+                <p class="top-ex-count" id="topExCount"></p>
+            </div>
+
             <!-- CLASSEMENT DES EX -->
             <div class="leaderboard reveal">
                 <h3 class="leaderboard-title">🏆 Classement des <span>ex les plus cités</span></h3>
@@ -1789,6 +1858,17 @@
 
             const maxVotes = sorted.length > 0 ? sorted[0][1] : 1;
             const leaderboard = document.getElementById('leaderboardList');
+
+            // Update Top Ex block
+            const topExBlock = document.getElementById('topExBlock');
+            if (sorted.length > 0) {
+                const [topName, topCount] = sorted[0];
+                topExBlock.style.display = 'block';
+                document.getElementById('topExName').textContent = topName;
+                document.getElementById('topExCount').innerHTML = 'Cité(e) <span>' + topCount + ' fois</span> par les signataires';
+            } else {
+                topExBlock.style.display = 'none';
+            }
 
             if (sorted.length === 0) {
                 leaderboard.innerHTML = '<p class="leaderboard-empty">Aucune signature pour le moment. Sois le premier !</p>';
