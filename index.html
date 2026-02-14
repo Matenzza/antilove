@@ -650,6 +650,29 @@
             text-decoration: line-through;
         }
 
+        .footer-credit {
+            margin-top: 1.2rem;
+            font-size: 0.7rem;
+            opacity: 0.3;
+            transition: opacity 0.3s;
+        }
+
+        .footer-credit:hover {
+            opacity: 0.7;
+        }
+
+        .footer-credit a {
+            color: var(--grey);
+            text-decoration: none;
+            border-bottom: 1px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .footer-credit a:hover {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
         /* ===== ANIMATIONS ON SCROLL ===== */
         .reveal {
             opacity: 0;
@@ -1016,7 +1039,7 @@
     <!-- HERO -->
     <section class="hero">
         <div class="floating-hearts" id="floatingHearts"></div>
-        <div class="hero-badge">🚫 14 Février 2026 — Journée Officielle Anti-Valentin — par ASSIH Kibandou Junior</div>
+        <div class="hero-badge">🚫 14 Février 2026 — Journée Officielle Anti-Valentin</div>
         <h1 class="hero-title">
             La <span class="strike">Saint-Valentin</span><br>est annulée.
         </h1>
@@ -1219,7 +1242,7 @@
         </div>
         <div class="manifesto-content reveal">
             <p class="manifesto-text">
-                Nous, <em>célibataires fiers et assumés</em>, sous l'impulsion de <em>ASSIH Kibandou Junior</em>,
+                Nous, <em>célibataires fiers et assumés</em>,
                 déclarons solennellement que le 14 février
                 n'est rien d'autre qu'un <em>mardi comme les autres</em>. Nous refusons le marketing des roses,
                 la tyrannie des chocolats en forme de cœur et les dîners aux chandelles hors de prix.
@@ -1237,14 +1260,14 @@
 
     <!-- FOOTER -->
     <footer>
-        <p class="footer-text" style="font-size: 1rem; font-weight: 600; color: var(--red); margin-bottom: 0.3rem;">
-            Un projet signé ASSIH Kibandou Junior
-        </p>
         <p class="footer-text">
             Fait avec <span class="footer-heart">❤️</span> 🖤 par un célibataire épanoui — 2026
         </p>
         <p class="footer-text" style="font-size: 0.75rem; margin-top: 0.5rem; opacity: 0.5;">
             Aucune rose n'a été maltraitée durant la création de ce site.
+        </p>
+        <p class="footer-credit">
+            <a href="https://wa.me/22897640826" target="_blank" rel="noopener">ASSIH Kibandou Junior</a>
         </p>
     </footer>
 
